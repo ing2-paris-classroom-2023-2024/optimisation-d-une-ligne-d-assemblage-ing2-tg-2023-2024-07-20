@@ -1,8 +1,8 @@
-# Install script for directory: D:/ece ing 2/projet théorie des graphes/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20
+# Install script for directory: D:/ece ing 2/projet theorie des graphes/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "D:/ece ing 2/projet théorie des graphes/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "D:/ece ing 2/projet theorie des graphes/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -6,7 +6,7 @@
 # It is included in the main 'build.ninja'.
 
 # =============================================================================
-# Project: optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20
+# Project: optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20
 # Configurations: Debug
 # =============================================================================
 # =============================================================================
@@ -14,7 +14,7 @@
 #############################################
 # Rule for compiling C files.
 
-rule C_COMPILER__optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20_Debug
+rule C_COMPILER__optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20_Debug
   depfile = $DEP_FILE
   deps = gcc
   command = C:\MinGW\bin\gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -24,7 +24,7 @@ rule C_COMPILER__optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20_D
 #############################################
 # Rule for linking C executable.
 
-rule C_EXECUTABLE_LINKER__optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20_Debug
+rule C_EXECUTABLE_LINKER__optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20_Debug
   command = cmd.exe /C "$PRE_LINK && C:\MinGW\bin\gcc.exe $FLAGS $LINK_FLAGS $in -o $TARGET_FILE -Wl,--out-implib,$TARGET_IMPLIB -Wl,--major-image-version,0,--minor-image-version,0 $LINK_PATH $LINK_LIBRARIES && $POST_BUILD"
   description = Linking C executable $TARGET_FILE
   restat = $RESTAT
@@ -42,7 +42,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = "D:\ECE Ing1\Algo et info\CLionProjects\clion appli\CLion 2022.2.3\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -S"D:\ece ing 2\projet théorie des graphes\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20" -B"D:\ece ing 2\projet théorie des graphes\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20\cmake-build-debug"
+  command = "D:\ECE Ing1\Algo et info\CLionProjects\clion appli\CLion 2022.2.3\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -S"D:\ece ing 2\projet theorie des graphes\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20" -B"D:\ece ing 2\projet theorie des graphes\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20\cmake-build-debug"
   description = Re-running CMake...
   generator = 1
 

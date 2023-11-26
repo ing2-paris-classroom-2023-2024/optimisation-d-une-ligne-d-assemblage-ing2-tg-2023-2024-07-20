@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20
+# Project: optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20
 # Configurations: Debug
 # =============================================================================
 
@@ -39,49 +39,49 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = D$:/ece$ ing$ 2/projet$ théorie$ des$ graphes/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20/cmake-build-debug/
+cmake_ninja_workdir = D$:/ece$ ing$ 2/projet$ theorie$ des$ graphes/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20
+# Object build statements for EXECUTABLE target optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20
 
 
 #############################################
-# Order-only phony target for optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20
+# Order-only phony target for optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20
 
-build cmake_object_order_depends_target_optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20: phony || CMakeFiles/optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.dir
+build cmake_object_order_depends_target_optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20: phony || CMakeFiles/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.dir
 
-build CMakeFiles/optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.dir/main.c.obj: C_COMPILER__optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20_Debug D$:/ece$ ing$ 2/projet$ théorie$ des$ graphes/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20/main.c || cmake_object_order_depends_target_optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20
-  DEP_FILE = CMakeFiles\optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.dir\main.c.obj.d
-  FLAGS = -g
-  OBJECT_DIR = CMakeFiles\optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.dir
-  OBJECT_FILE_DIR = CMakeFiles\optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.dir
-  TARGET_COMPILE_PDB = CMakeFiles\optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.dir\
-  TARGET_PDB = optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.pdb
+build CMakeFiles/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.dir/main.c.obj: C_COMPILER__optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20_Debug D$:/ece$ ing$ 2/projet$ theorie$ des$ graphes/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20/main.c || cmake_object_order_depends_target_optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20
+  DEP_FILE = CMakeFiles\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.dir\main.c.obj.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.dir
+  OBJECT_FILE_DIR = CMakeFiles\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.dir
+  TARGET_COMPILE_PDB = CMakeFiles\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.dir\
+  TARGET_PDB = optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.pdb
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20
+# Link build statements for EXECUTABLE target optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20
 
 
 #############################################
-# Link the executable optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.exe
+# Link the executable optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.exe
 
-build optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.exe: C_EXECUTABLE_LINKER__optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20_Debug CMakeFiles/optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.dir/main.c.obj
+build optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.exe: C_EXECUTABLE_LINKER__optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20_Debug CMakeFiles/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.dir/main.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
-  OBJECT_DIR = CMakeFiles\optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.dir
+  OBJECT_DIR = CMakeFiles\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_COMPILE_PDB = CMakeFiles\optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.dir\
-  TARGET_FILE = optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.exe
-  TARGET_IMPLIB = liboptimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.dll.a
-  TARGET_PDB = optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.pdb
+  TARGET_COMPILE_PDB = CMakeFiles\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.dir\
+  TARGET_FILE = optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.exe
+  TARGET_IMPLIB = liboptimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.dll.a
+  TARGET_PDB = optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.pdb
 
 
 #############################################
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "D:\ece ing 2\projet théorie des graphes\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20\cmake-build-debug" && "D:\ECE Ing1\Algo et info\CLionProjects\clion appli\CLion 2022.2.3\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  COMMAND = cmd.exe /C "cd /D "D:\ece ing 2\projet theorie des graphes\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20\cmake-build-debug" && "D:\ECE Ing1\Algo et info\CLionProjects\clion appli\CLion 2022.2.3\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -92,7 +92,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "D:\ece ing 2\projet théorie des graphes\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20\cmake-build-debug" && "D:\ECE Ing1\Algo et info\CLionProjects\clion appli\CLion 2022.2.3\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -S"D:\ece ing 2\projet théorie des graphes\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20" -B"D:\ece ing 2\projet théorie des graphes\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20\cmake-build-debug""
+  COMMAND = cmd.exe /C "cd /D "D:\ece ing 2\projet theorie des graphes\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20\cmake-build-debug" && "D:\ECE Ing1\Algo et info\CLionProjects\clion appli\CLion 2022.2.3\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -S"D:\ece ing 2\projet theorie des graphes\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20" -B"D:\ece ing 2\projet theorie des graphes\optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20\cmake-build-debug""
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -102,7 +102,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
-build optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20: phony optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.exe
+build optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20: phony optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.exe
 
 # =============================================================================
 # Folder targets.
@@ -110,9 +110,9 @@ build optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20: phony optim
 # =============================================================================
 
 #############################################
-# Folder: D:/ece ing 2/projet théorie des graphes/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20/cmake-build-debug
+# Folder: D:/ece ing 2/projet theorie des graphes/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20/cmake-build-debug
 
-build all: phony optimisation_d_une_ligne_d_assemblage_ing2_tg_2023_2024_07_20.exe
+build all: phony optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-07-20.exe
 
 # =============================================================================
 # Built-in targets
