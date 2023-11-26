@@ -82,7 +82,7 @@ void lireTempsExecution(Graphe *graphe, char nomFichier[]) {
 }
 
 // Fonction récursive pour le DFS
-void dfs(Graphe *graphe, int sommet, int visite[]) {
+void dfs(Graphe *graphe, int sommet, int visite[], double *tempsTotal) {
     int i;
 
     int indice = -1;
@@ -98,12 +98,14 @@ void dfs(Graphe *graphe, int sommet, int visite[]) {
     // Afficher l'opération et son temps associé
     printf("%s (t%.2lf) ", graphe->operations[sommet], graphe->tempsExecution[indice]);
 
+    *tempsTotal += graphe->tempsExecution[indice]; // Ajouter le temps d'exécution
+
     visite[sommet] = 1;
 
     // Parcourir les voisins non visités
     for (i = 0; i < graphe->nombreOperations; i++) {
         if (graphe->matriceAdjacence[sommet][i] == 1 && !visite[i]) {
-            dfs(graphe, i, visite);
+            dfs(graphe, i, visite, tempsTotal);
         }
     }
 }
@@ -111,6 +113,7 @@ void dfs(Graphe *graphe, int sommet, int visite[]) {
 // Fonction principale pour le parcours DFS
 void parcourirGraphe(Graphe *graphe) {
     int i, visite[MAX_OPERATIONS];
+    double tempsTotal = 0.0;
 
     // Initialiser le tableau de visite à zéro
     for (i = 0; i < MAX_OPERATIONS; i++) {
@@ -120,11 +123,11 @@ void parcourirGraphe(Graphe *graphe) {
     // Appliquer le DFS à partir de chaque sommet non visité
     for (i = 0; i < graphe->nombreOperations; i++) {
         if (!visite[i]) {
-            dfs(graphe, i, visite);
+            dfs(graphe, i, visite, &tempsTotal);
         }
     }
 
-    printf("\n");
+    printf("\nTemps total : %.2lf secondes\n", tempsTotal);
 }
 
 int main() {
@@ -157,7 +160,7 @@ int main() {
     // Lire les temps d'exécution à partir du fichier d'opérations
     lireTempsExecution(&graphe, nomFichierOperations);
 
-    // Parcourir le graphe en utilisant DFS
+    // Parcourir le graphe en utilisant DFS et calculer le temps total
     printf("Chemin parcourant toutes les operations :\n");
     parcourirGraphe(&graphe);
 
