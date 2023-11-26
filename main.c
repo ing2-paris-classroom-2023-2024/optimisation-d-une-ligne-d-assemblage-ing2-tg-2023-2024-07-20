@@ -72,7 +72,7 @@ void topologicalSort(Graph* graph) {
         }
     }
 
-    printf("Ordre optimal des opérations:\n");
+    printf("Ordre optimal des operations:\n");
     for (int i = stackIndex - 1; i >= 0; --i) {
         printf("%d ", stack[i]);
     }
@@ -81,27 +81,46 @@ void topologicalSort(Graph* graph) {
     free(visited);
 }
 
+
 int main() {
-    FILE* file = fopen("precedences.txt", "r");
-    if (file == NULL) {
-        printf("Erreur lors de l'ouverture du fichier.\n");
-        return -1;
+    char fichier_precedences[100];
+    FILE* file;
+
+    while (1) {
+        printf("Veuillez entrer le nom du fichier : ");
+        scanf("%s", fichier_precedences);
+
+        file = fopen(fichier_precedences, "r");
+
+        if (file != NULL) {
+            break;  // Si le fichier est ouvert avec succès, sortir de la boucle
+        } else {
+            printf("Erreur lors de l'ouverture du fichier. Veuillez réessayer.\n");
+        }
     }
 
     int numNodes = 0;
     int src, dest;
+    int numArcs = 0; // Nouvelle variable pour compter les arcs
+
     while (fscanf(file, "%d %d", &src, &dest) == 2) {
         numNodes = numNodes > src ? numNodes : src;
         numNodes = numNodes > dest ? numNodes : dest;
+        numArcs++; // Incrémenter le nombre d'arcs à chaque lecture
     }
+
     fclose(file);
+
+    printf("Nombre d'arcs dans le fichier : %d\n", numArcs);
 
     Graph* graph = createGraph(numNodes + 1);
 
-    file = fopen("precedences.txt", "r");
+    file = fopen(fichier_precedences, "r");
+
     while (fscanf(file, "%d %d", &src, &dest) == 2) {
         addEdge(graph, src, dest);
     }
+
     fclose(file);
 
     topologicalSort(graph);
