@@ -1,132 +1,120 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define MAX_NODES 100
+#define MAX_OPERATIONS 100
 
+// Structure pour représenter un graphe
 typedef struct {
-    int v;
-    struct Node* next;
-} Node;
+    int nombreOperations;
+    char operations[MAX_OPERATIONS][50];
+    int matriceAdjacence[MAX_OPERATIONS][MAX_OPERATIONS];
+} Graphe;
 
-typedef struct {
-    Node* head;
-} LinkedList;
+// Initialiser le graphe
+void initialiserGraphe(Graphe *graphe) {
+    int i, j;
 
-typedef struct {
-    int numNodes;
-    LinkedList* adjacencyList;
-} Graph;
-
-Node* createNode(int v) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    newNode->v = v;
-    newNode->next = NULL;
-    return newNode;
-}
-
-Graph* createGraph(int numNodes) {
-    Graph* graph = (Graph*)malloc(sizeof(Graph));
-    graph->numNodes = numNodes;
-    graph->adjacencyList = (LinkedList*)malloc(numNodes * sizeof(LinkedList));
-
-    for (int i = 0; i < numNodes; ++i) {
-        graph->adjacencyList[i].head = NULL;
-    }
-
-    return graph;
-}
-
-void addEdge(Graph* graph, int src, int dest) {
-    Node* newNode = createNode(dest);
-    newNode->next = graph->adjacencyList[src].head;
-    graph->adjacencyList[src].head = newNode;
-}
-
-void topologicalSortUtil(Graph* graph, int v, int visited[], int stack[], int* stackIndex) {
-    visited[v] = 1;
-
-    Node* currentNode = graph->adjacencyList[v].head;
-    while (currentNode != NULL) {
-        int adjacentNode = currentNode->v;
-        if (!visited[adjacentNode]) {
-            topologicalSortUtil(graph, adjacentNode, visited, stack, stackIndex);
-        }
-        currentNode = currentNode->next;
-    }
-
-    stack[(*stackIndex)++] = v;
-}
-
-void topologicalSort(Graph* graph) {
-    int* stack = (int*)malloc(graph->numNodes * sizeof(int));
-    int stackIndex = 0;
-    int* visited = (int*)malloc(graph->numNodes * sizeof(int));
-
-    for (int i = 0; i < graph->numNodes; ++i) {
-        visited[i] = 0;
-    }
-
-    for (int i = 0; i < graph->numNodes; ++i) {
-        if (!visited[i]) {
-            topologicalSortUtil(graph, i, visited, stack, &stackIndex);
+    // Initialiser la matrice d'adjacence à zéro
+    for (i = 0; i < MAX_OPERATIONS; i++) {
+        for (j = 0; j < MAX_OPERATIONS; j++) {
+            graphe->matriceAdjacence[i][j] = 0;
         }
     }
 
-    printf("Ordre optimal des operations:\n");
-    for (int i = stackIndex - 1; i >= 0; --i) {
-        printf("%d ", stack[i]);
-    }
-
-    free(stack);
-    free(visited);
+    // Initialiser le nombre d'opérations à zéro
+    graphe->nombreOperations = 0;
 }
 
+// Ajouter une relation de précédence entre deux opérations
+void ajouterRelation(Graphe *graphe, char operation1[], char operation2[]) {
+    int i, index1 = -1, index2 = -1;
+
+    // Rechercher les indices des opérations dans la liste
+    for (i = 0; i < graphe->nombreOperations; i++) {
+        if (strcmp(graphe->operations[i], operation1) == 0) {
+            index1 = i;
+        }
+        if (strcmp(graphe->operations[i], operation2) == 0) {
+            index2 = i;
+        }
+    }
+
+    // Si les opérations ne sont pas trouvées, les ajouter à la liste
+    if (index1 == -1) {
+        strcpy(graphe->operations[graphe->nombreOperations], operation1);
+        index1 = graphe->nombreOperations++;
+    }
+    if (index2 == -1) {
+        strcpy(graphe->operations[graphe->nombreOperations], operation2);
+        index2 = graphe->nombreOperations++;
+    }
+
+    // Ajouter l'arc dans la matrice d'adjacence
+    graphe->matriceAdjacence[index1][index2] = 1;
+}
+
+// Fonction récursive pour le DFS
+void dfs(Graphe *graphe, int sommet, int visite[]) {
+    int i;
+
+    printf("%s ", graphe->operations[sommet]);
+    visite[sommet] = 1;
+
+    // Parcourir les voisins non visités
+    for (i = 0; i < graphe->nombreOperations; i++) {
+        if (graphe->matriceAdjacence[sommet][i] == 1 && !visite[i]) {
+            dfs(graphe, i, visite);
+        }
+    }
+}
+
+// Fonction principale pour le parcours DFS
+void parcourirGraphe(Graphe *graphe) {
+    int i, visite[MAX_OPERATIONS];
+
+    // Initialiser le tableau de visite à zéro
+    for (i = 0; i < MAX_OPERATIONS; i++) {
+        visite[i] = 0;
+    }
+
+    // Appliquer le DFS à partir de chaque sommet non visité
+    for (i = 0; i < graphe->nombreOperations; i++) {
+        if (!visite[i]) {
+            dfs(graphe, i, visite);
+        }
+    }
+
+    printf("\n");
+}
 
 int main() {
-    char fichier_precedences[100];
-    FILE* file;
+    Graphe graphe;
+    FILE *fichier;
+    char nomFichier[100];
+    char operation1[50], operation2[50];
 
-    while (1) {
-        printf("Veuillez entrer le nom du fichier : ");
-        scanf("%s", fichier_precedences);
+    // Initialiser le graphe
+    initialiserGraphe(&graphe);
 
-        file = fopen(fichier_precedences, "r");
+    // Demander à l'utilisateur le nom du fichier
+    printf("Entrez le nom du fichier (precedences.txt) : ");
+    scanf("%s", nomFichier);
 
-        if (file != NULL) {
-            break;  // Si le fichier est ouvert avec succès, sortir de la boucle
-        } else {
-            printf("Erreur lors de l'ouverture du fichier. Veuillez réessayer.\n");
-        }
+    // Ouvrir le fichier
+    fichier = fopen(nomFichier, "r");
+
+    // Lire les relations de précédence à partir du fichier
+    while (fscanf(fichier, "%s %s", operation1, operation2) == 2) {
+        ajouterRelation(&graphe, operation1, operation2);
     }
 
-    int numNodes = 0;
-    int src, dest;
-    int numArcs = 0; // Nouvelle variable pour compter les arcs
+    // Fermer le fichier
+    fclose(fichier);
 
-    while (fscanf(file, "%d %d", &src, &dest) == 2) {
-        numNodes = numNodes > src ? numNodes : src;
-        numNodes = numNodes > dest ? numNodes : dest;
-        numArcs++; // Incrémenter le nombre d'arcs à chaque lecture
-    }
-
-    fclose(file);
-
-    printf("Nombre d'arcs dans le fichier : %d\n", numArcs);
-
-    Graph* graph = createGraph(numNodes + 1);
-
-    file = fopen(fichier_precedences, "r");
-
-    while (fscanf(file, "%d %d", &src, &dest) == 2) {
-        addEdge(graph, src, dest);
-    }
-
-    fclose(file);
-
-    topologicalSort(graph);
-
-    free(graph->adjacencyList);
-    free(graph);
+    // Parcourir le graphe en utilisant DFS
+    printf("Chemin parcourant toutes les operations :\n");
+    parcourirGraphe(&graphe);
 
     return 0;
 }
