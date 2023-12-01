@@ -1,168 +1,155 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-#define MAX_OPERATIONS 100
+#define MAX_SOMMETS 100
+#define MAX_EXCLUSIONS 100
 
-// Structure pour représenter un graphe
 typedef struct {
-    int nombreOperations;
-    char operations[MAX_OPERATIONS][50];
-    int matriceAdjacence[MAX_OPERATIONS][MAX_OPERATIONS];
-    double tempsExecution[MAX_OPERATIONS];
-} Graphe;
-
-// Initialiser le graphe
-void initialiserGraphe(Graphe *graphe) {
-    int i, j;
-
-    // Initialiser la matrice d'adjacence et le tableau des temps d'exécution à zéro
-    for (i = 0; i < MAX_OPERATIONS; i++) {
-        for (j = 0; j < MAX_OPERATIONS; j++) {
-            graphe->matriceAdjacence[i][j] = 0;
-        }
-        graphe->tempsExecution[i] = 0.0;
-    }
-
-    // Initialiser le nombre d'opérations à zéro
-    graphe->nombreOperations = 0;
-}
-
-// Ajouter une relation de précédence entre deux opérations
-void ajouterRelation(Graphe *graphe, char operation1[], char operation2[]) {
-    int i, index1 = -1, index2 = -1;
-
-    // Rechercher les indices des opérations dans la liste
-    for (i = 0; i < graphe->nombreOperations; i++) {
-        if (strcmp(graphe->operations[i], operation1) == 0) {
-            index1 = i;
-        }
-        if (strcmp(graphe->operations[i], operation2) == 0) {
-            index2 = i;
-        }
-    }
-
-    // Si les opérations ne sont pas trouvées, les ajouter à la liste
-    if (index1 == -1) {
-        strcpy(graphe->operations[graphe->nombreOperations], operation1);
-        index1 = graphe->nombreOperations++;
-    }
-    if (index2 == -1) {
-        strcpy(graphe->operations[graphe->nombreOperations], operation2);
-        index2 = graphe->nombreOperations++;
-    }
-
-    // Ajouter l'arc dans la matrice d'adjacence
-    graphe->matriceAdjacence[index1][index2] = 1;
-}
-
-// Lire les temps d'exécution à partir du fichier "operations.txt"
-void lireTempsExecution(Graphe *graphe, char nomFichier[]) {
-    FILE *fichier;
-    char operation[50];
+    int sommet;
     double temps;
+} Sommet;
 
-    // Ouvrir le fichier
-    fichier = fopen(nomFichier, "r");
+typedef struct {
+    int station;
+    int* sommets;
+    int nb_sommets;
+    int temps_restant;
+} Station;
 
-    // Lire les temps d'exécution à partir du fichier
-    while (fscanf(fichier, "%s %lf", operation, &temps) == 2) {
-        int i;
-        // Rechercher l'indice de l'opération dans la liste
-        for (i = 0; i < graphe->nombreOperations; i++) {
-            if (strcmp(graphe->operations[i], operation) == 0) {
-                graphe->tempsExecution[i] = temps;
-                break;
+int est_exclus(int sommet1, int sommet2, int** exclusions, int nb_exclusions) {
+    for (int i = 0; i < nb_exclusions; i++) {
+        if ((exclusions[i][0] == sommet1 && exclusions[i][1] == sommet2) || (exclusions[i][0] == sommet2 && exclusions[i][1] == sommet1)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int est_predecesseur(int sommet, int* predecesseurs, int nb_predecesseurs) {
+    for (int i = 0; i < nb_predecesseurs; i++) {
+        if (predecesseurs[i] == sommet) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void regrouper_sommets(Sommet* sommets, int nb_sommets, int T0, int** exclusions, int nb_exclusions) {
+    Station* stations = malloc(MAX_SOMMETS * sizeof(Station));
+    int nb_stations = 0;
+    int t_stations;
+    int* predecesseurs = malloc(MAX_SOMMETS * sizeof(int));
+    int nb_predecesseurs = 0;
+
+    for (int i = 0; i < nb_sommets; i++) {
+        int sommet = sommets[i].sommet;
+        int temps = sommets[i].temps;
+
+        if (!est_predecesseur(sommet, predecesseurs, nb_predecesseurs)) {
+            int station_existante = 0;
+            for (int j = 0; j < nb_stations; j++) {
+                if (temps <= stations[j].temps_restant && !est_exclus(sommet, stations[j].sommets[0], exclusions, nb_exclusions))
+                {
+                    stations[j].sommets[stations[j].nb_sommets] = sommet;
+                    stations[j].nb_sommets++;
+                    station_existante = 1;
+                    stations[j].temps_restant = stations[j].temps_restant - temps;
+                    break;
+                }
+            }
+// && temps <= stations[nb_stations].temps_restant
+            if (!station_existante) {
+                stations[nb_stations].station = nb_stations + 1;
+                stations[nb_stations].sommets = malloc(MAX_SOMMETS * sizeof(int));
+                stations[nb_stations].sommets[0] = sommet;
+                stations[nb_stations].nb_sommets = 1;
+                stations[nb_stations].temps_restant = T0-temps;
+                nb_stations++;
             }
         }
+
+        predecesseurs[nb_predecesseurs] = sommet;
+        nb_predecesseurs++;
     }
 
-    // Fermer le fichier
-    fclose(fichier);
-}
-
-// Fonction récursive pour le DFS
-void dfs(Graphe *graphe, int sommet, int visite[], double *tempsTotal) {
-    int i;
-
-    int indice = -1;
-
-    // Trouver l'indice de l'opération dans la liste
-    for (i = 0; i < graphe->nombreOperations; i++) {
-        if (strcmp(graphe->operations[i], graphe->operations[sommet]) == 0) {
-            indice = i;
-            break;
+    for (int i = 0; i < nb_stations; i++) {
+        t_stations = (T0-stations[i].temps_restant);
+        printf("Station %d (%d.%02ds): ", stations[i].station, t_stations/100, t_stations%100 );
+        for (int j = 0; j < stations[i].nb_sommets; j++) {
+            printf("%d ", stations[i].sommets[j]);
         }
+        printf("\n");
     }
 
-    // Afficher l'opération et son temps associé
-    printf("%s (t%.2lf) ", graphe->operations[sommet], graphe->tempsExecution[indice]);
-
-    *tempsTotal += graphe->tempsExecution[indice]; // Ajouter le temps d'exécution
-
-    visite[sommet] = 1;
-
-    // Parcourir les voisins non visités
-    for (i = 0; i < graphe->nombreOperations; i++) {
-        if (graphe->matriceAdjacence[sommet][i] == 1 && !visite[i]) {
-            dfs(graphe, i, visite, tempsTotal);
-        }
+    free(predecesseurs);
+    for (int i = 0; i < nb_stations; i++) {
+        free(stations[i].sommets);
     }
-}
-
-// Fonction principale pour le parcours DFS
-void parcourirGraphe(Graphe *graphe) {
-    int i, visite[MAX_OPERATIONS];
-    double tempsTotal = 0.0;
-
-    // Initialiser le tableau de visite à zéro
-    for (i = 0; i < MAX_OPERATIONS; i++) {
-        visite[i] = 0;
-    }
-
-    // Appliquer le DFS à partir de chaque sommet non visité
-    for (i = 0; i < graphe->nombreOperations; i++) {
-        if (!visite[i]) {
-            dfs(graphe, i, visite, &tempsTotal);
-        }
-    }
-
-    printf("\nTemps total : %.2lf secondes\n", tempsTotal);
+    free(stations);
 }
 
 int main() {
-    Graphe graphe;
-    char nomFichierPrecedences[100], nomFichierOperations[100];
-    char operation1[50], operation2[50];
+    FILE* file_precedences = fopen("pred.txt", "r");
+    FILE* file_temps = fopen("tpsope.txt", "r");
+    //FILE* file_exclusions = fopen("exclusions.txt", "r");
 
-    // Initialiser le graphe
-    initialiserGraphe(&graphe);
+    Sommet* sommets = malloc(MAX_SOMMETS * sizeof(Sommet));
+    int nb_sommets = 0;
 
-    // Demander à l'utilisateur le nom du fichier de précédences
-    printf("Entrez le nom du fichier de precedences (precedences.txt) : ");
-    scanf("%s", nomFichierPrecedences);
+    int T0;
 
-    // Ouvrir le fichier de précédences
-    FILE *fichierPrecedences = fopen(nomFichierPrecedences, "r");
+    int** exclusions = malloc(MAX_EXCLUSIONS * sizeof(int*));
+    int nb_exclusions = 0;
 
-    // Lire les relations de précédence à partir du fichier de précédences
-    while (fscanf(fichierPrecedences, "%s %s", operation1, operation2) == 2) {
-        ajouterRelation(&graphe, operation1, operation2);
+    // Lire le fichier precedences.txt
+    if (file_precedences != NULL) {
+        int sommet1, sommet2;
+        while (fscanf(file_precedences, "%d %d", &sommet1, &sommet2) == 2) {
+            // Ajouter les sommets à la liste des sommets
+            sommets[nb_sommets].sommet = sommet1;
+            sommets[nb_sommets].temps = 0.0;
+            nb_sommets++;
+
+            sommets[nb_sommets].sommet = sommet2;
+            sommets[nb_sommets].temps = 0.0;
+            nb_sommets++;
+        }
+        fclose(file_precedences);
     }
 
-    // Fermer le fichier de précédences
-    fclose(fichierPrecedences);
+    // Lire le fichier temps.txt
+    if (file_temps != NULL) {
+        int sommet;
+        double temps;
+        while (fscanf(file_temps, "%d %lf", &sommet, &temps) == 2) {
+            // Mettre à jour le temps des sommets correspondants
+            for (int i = 0; i < nb_sommets; i++) {
+                if (sommets[i].sommet == sommet) {
+                    sommets[i].temps = temps;
+                    break;
+                }
+            }
+        }
+        fclose(file_temps);
+    }
 
-    // Demander à l'utilisateur le nom du fichier d'opérations
-    printf("Entrez le nom du fichier d'operations (operations.txt) : ");
-    scanf("%s", nomFichierOperations);
 
-    // Lire les temps d'exécution à partir du fichier d'opérations
-    lireTempsExecution(&graphe, nomFichierOperations);
+    // Lire le fichier temps_cycle.txt pour obtenir la valeur de T0
+    FILE* file_temps_cycle = fopen("temps_cycle.txt", "r");
+    if (file_temps_cycle != NULL) {
+        fscanf(file_temps_cycle, "%d", &T0);
+        fclose(file_temps_cycle);
+    }
+    printf("temps par cycle : %ds\n\n",T0/100);
+    // Regrouper les sommets par station
+    regrouper_sommets(sommets, nb_sommets, T0, exclusions, nb_exclusions);
 
-    // Parcourir le graphe en utilisant DFS et calculer le temps total
-    printf("Chemin parcourant toutes les operations :\n");
-    parcourirGraphe(&graphe);
+    // Libérer la mémoire allouée
+    for (int i = 0; i < nb_exclusions; i++) {
+        free(exclusions[i]);
+    }
+    free(exclusions);
+    free(sommets);
 
     return 0;
 }
