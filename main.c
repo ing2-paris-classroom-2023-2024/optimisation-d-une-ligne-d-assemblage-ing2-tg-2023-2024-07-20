@@ -10,7 +10,7 @@
 #define MAX_SOMMETS 100
 #define MAX_EXCLUSIONS 100
 
-
+//test
 typedef struct {
     int sommet;
     double temps;
