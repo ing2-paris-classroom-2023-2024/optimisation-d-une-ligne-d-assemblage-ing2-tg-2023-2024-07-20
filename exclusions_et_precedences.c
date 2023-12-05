@@ -1,11 +1,12 @@
+//
+// Created by joss on 03/12/2023.
+//
+
+#include "exclusions_et_precedences.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "exclusion.h"
 #include "precedences_et_cycle.h"
-#include "exclusions_et_precedences.h"
-#include "exclusions_et_cycle.h"
-
-
 
 #define MAX_SOMMETS 100
 #define MAX_EXCLUSIONS 100
@@ -27,10 +28,13 @@ typedef struct {
 } Station;
 
 // Structure pour représenter une paire d'opérations interdites
+typedef struct {
+    int operation1;
+    int operation2;
+} Exclusion;
 
 
-
-int est_exclus(int sommet1, int sommet2, int** exclusions, int nb_exclusions) {
+int op_exclus(int sommet1, int sommet2, int** exclusions, int nb_exclusions) {
     for (int i = 0; i < nb_exclusions; i++) {
         if ((exclusions[i][0] == sommet1 && exclusions[i][1] == sommet2) || (exclusions[i][0] == sommet2 && exclusions[i][1] == sommet1)) {
             return 1;
@@ -39,7 +43,7 @@ int est_exclus(int sommet1, int sommet2, int** exclusions, int nb_exclusions) {
     return 0;
 }
 
-int est_predecesseur(Sommet* sommet, int id, int nb_stations, Station* stations)
+int op_predecesseur(Sommet* sommet, int id, int nb_stations, Station* stations)
 {
     // verifier qu'un sommet n'est pas prédécesseur d'un sommet qui n'est pas dans la station en cours ou les précédentes
     int nb_trouve=0;
@@ -58,12 +62,13 @@ int est_predecesseur(Sommet* sommet, int id, int nb_stations, Station* stations)
     return 1;
 }
 
-void regrouper_sommets(Sommet* sommets, int nb_sommets, int T0, int** exclusions, int nb_exclusions) {
+void assembler_sommets(Sommet* sommets, int nb_sommets, int T0, int** exclusions, int nb_exclusions) {
     Station* stations = malloc(MAX_SOMMETS * sizeof(Station));
     int nb_stations = 0;
     int nb_sommets_positionnes = 0;
     int positionne_ce_tour = 0;
     int i = 0;
+    T0= T0+ 10000;
 
     while (nb_sommets_positionnes < nb_sommets) {
         if (i > nb_sommets) {
@@ -72,7 +77,7 @@ void regrouper_sommets(Sommet* sommets, int nb_sommets, int T0, int** exclusions
                 stations[nb_stations].station = nb_stations + 1;
                 stations[nb_stations].sommets = malloc(MAX_SOMMETS * sizeof(int));
                 stations[nb_stations].nb_sommets = 0;
-                stations[nb_stations].temps_restant = T0;
+                //stations[nb_stations].temps_restant = T0;
                 nb_stations++;
             }
             positionne_ce_tour = 0;
@@ -84,15 +89,15 @@ void regrouper_sommets(Sommet* sommets, int nb_sommets, int T0, int** exclusions
         }
 
         int sommet = sommets[i].sommet;
-        int temps = sommets[i].temps;
+        int temps = 100000;
 
         for (int j = 0; j < nb_stations && i > 0; j++) {
-            if (!est_predecesseur(sommets, i, j + 1, stations)) {
-                if (temps <= stations[j].temps_restant && sommet > 0) {
+            if (!op_predecesseur(sommets, i, j + 1, stations)) {
+                if ( sommet > 0) {
                     int exclu = 0;
 
                     for (int k = 0; k < stations[j].nb_sommets; k++) {
-                        if (est_exclus(sommet, stations[j].sommets[k], exclusions, nb_exclusions)) {
+                        if (op_exclus(sommet, stations[j].sommets[k], exclusions, nb_exclusions)) {
                             exclu = 1;
                             break;
                         }
@@ -104,9 +109,8 @@ void regrouper_sommets(Sommet* sommets, int nb_sommets, int T0, int** exclusions
                         stations[j].sommets[stations[j].nb_sommets] = sommet;
                         sommets[i].positionne = 1;
                         stations[j].nb_sommets++;
-                        stations[j].temps_restant = stations[j].temps_restant - temps;
+                        //stations[j].temps_restant = stations[j].temps_restant - temps;
 
-                        //printf("Sommet %d positionne dans la station %d\n", sommet, stations[j].station);
 
                         break;
                     }
@@ -121,18 +125,17 @@ void regrouper_sommets(Sommet* sommets, int nb_sommets, int T0, int** exclusions
             stations[0].sommets = malloc(MAX_SOMMETS * sizeof(int));
             stations[0].sommets[0] = sommet;
             stations[0].nb_sommets = 1;
-            stations[0].temps_restant = T0 - temps;
+            //stations[0].temps_restant = T0 - temps;
             sommets[0].positionne = 1;
             nb_sommets_positionnes++;
             nb_stations++;
 
-            //printf("Sommet %d positionne dans la station %d\n", sommet, stations[0].station);
         }
 
         i++;
     }
 
-    printf("Affichage lignes d'assemblages avec toutes les contraintes\n");
+    printf("Affichage lignes d'assemblages avec exclusions et precedences\n");
     for (int i = 0; i < nb_stations; i++) {
         int t_stations = (T0 - stations[i].temps_restant);
         printf("Station %d (%d.%02ds): ", stations[i].station, t_stations / 100, t_stations % 100);
@@ -174,49 +177,18 @@ void regrouper_sommets(Sommet* sommets, int nb_sommets, int T0, int** exclusions
 }
 
 
-void afficher_menu() {
-      // Clear the screen for better visibility
-    printf("\n***********************************************************************************************\n");
-    printf("******************************      Menu Principal      ******************************************\n");
-    printf("**************************************************************************************************\n");
-    printf("***      1. Afficher la ligne d'assemblage, toutes contraintes respectees                      ***\n");
-    printf("***      2. Afficher la ligne d'assemblage avec les contraintes de precedences et de cycle     ***\n");
-    printf("***      3. Afficher le ligne d'assemblage avec la contraintes d'exclusion                     ***\n");
-    printf("***      4. Afficher la ligne d'assemblage avec les contraintes d'exclusions et precedences    ***\n");
-    printf("***      5. Afficher la ligne d'assemblage avec les contraintes d'exclusions et cycles         ***\n");
-    printf("***      6. Quitter                                                                            ***\n");
-    printf("**************************************************************************************************\n");
 
-}
 
-int main() {
-    char file_temps_name[50];
-    char file_precedences_name[50];
-    char file_exclusions_name[50];
-    char file_temps_cycle_nom[50];
+int exclusions_et_precedences(char fichier_precedences[50], char fichier_cycle[50],char fichier_temps[50],char fichier_exclusions[50]) {
+    FILE* file_precedences = fopen(fichier_precedences, "r");
+    FILE* file_temps = fopen(fichier_temps, "r");
+    FILE* file_exclusions = fopen(fichier_exclusions, "r");
+    FILE* file_temps_cycle = fopen(fichier_cycle, "r");
 
-    printf("Entrez le nom du fichier temps (ex: temps.txt) : ");
-    scanf("%s", file_temps_name);
-
-    printf("Entrez le nom du fichier precedences (ex: pred.txt) : ");
-    scanf("%s", file_precedences_name);
-
-    printf("Entrez le nom du fichier exclusions (ex: exclusions.txt): ");
-    scanf("%s", file_exclusions_name);
-
-    printf("Entrez le nom du fichier temps_cycle (ex: temps_cycle.txt) : ");
-    scanf("%s", file_temps_cycle_nom);
-
-    FILE* file_temps = fopen(file_temps_name, "r");
-    FILE* file_precedences = fopen(file_precedences_name, "r");
-    FILE* file_exclusions = fopen(file_exclusions_name, "r");
-    FILE* file_temps_cycle = fopen(file_temps_cycle_nom, "r");
 
     Sommet* sommets = malloc(MAX_SOMMETS * sizeof(Sommet));
     int nb_sommets = 0;
-
     int T0;
-    int choix;
 
     int** exclusions = malloc(MAX_EXCLUSIONS * sizeof(int*));
     int nb_exclusions = 0;
@@ -274,55 +246,17 @@ int main() {
 
     if (file_temps_cycle != NULL) {
         fscanf(file_temps_cycle, "%d", &T0);
+
         fclose(file_temps_cycle);
     }
-    printf("temps par cycle : %ds\n\n",T0/100);
     // Regrouper les sommets par station
-
+    assembler_sommets(sommets, nb_sommets, T0, exclusions, nb_exclusions);
 
 
     // Libérer la mémoire allouée
     for (int i = 0; i < nb_exclusions; i++) {
         free(exclusions[i]);
     }
-    do
-    {
-        afficher_menu();
-        printf("Choix : ");
-        scanf("%d", &choix);
-
-            switch (choix) {
-                case 1:
-                    regrouper_sommets(sommets, nb_sommets, T0, exclusions, nb_exclusions);
-                    break;
-                case 2:
-                    precedences_et_cycle(file_precedences_name, file_temps_cycle_nom,file_temps_name,file_exclusions_name);
-                    break;
-                case 3:
-                    exclusion(file_exclusions_name);
-                    break;
-                case 4:
-                    exclusions_et_precedences(file_precedences_name,file_temps_cycle_nom,file_temps_name,file_exclusions_name);
-                    break;
-                case 5:
-                    exclusions_et_cycle(file_precedences_name, file_temps_cycle_nom,file_temps_name,file_exclusions_name);
-                    break;
-                case 6:
-                    printf("Au revoir!\n");
-                    return 0;
-                    break;
-                default:
-                    printf("Choix invalide. Veuillez saisir un nombre entre 1 et 6.\n");
-            }
-            // Demander à l'utilisateur s'il veut rester dans le même fichier
-            do{
-                printf("Voulez-vous revenir au menu?(o/n): ");
-                scanf(" %c", &choix);
-            }while (choix != 'o' && choix != 'n' && choix != 'O' && choix != 'N');
-
-        } while (choix == 'o' || choix == 'O');
-    printf("Au revoir!\n");
-
     free(exclusions);
     free(sommets);
     fclose(file_temps);
