@@ -1,4 +1,4 @@
-ToolSet: 5.0 (local)@C:\MinGW
+ToolSet: w64 6.0 (local)@C:\Program Files\CodeBlocks\MinGW
 Options: 
 
-Options:-DCMAKE_MAKE_PROGRAM=D:/ECE Ing1/Algo et info/CLionProjects/clion appli/CLion 2022.2.3/bin/ninja/win/ninja.exe
+Options:-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2022.2.3/Nouveau dossier/CLion 2022.2.3/bin/ninja/win/ninja.exe
